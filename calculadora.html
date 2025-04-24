@@ -8,58 +8,53 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            height: 100%;
-            font-family: Arial, Helvetica, sans-serif;
         }
 
         .fundo {
             background-image: linear-gradient(45deg, black, rgb(20, 73, 220));
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
         }
 
         .calculadora {
+            position: absolute;
             background-color: rgba(0, 0, 0, 0.8);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            color: white;
+            padding: 15px;
         }
 
         .botao {
             width: 50px;
             height: 50px;
-            font-size: 20px;
+            font-size: 25px;
             cursor: pointer;
-            margin: 4px;
+            margin: 3px;
             background-color: rgb(31, 31, 31);
             border: none;
             color: #fff;
-            border-radius: 5px;
         }
 
         .botao:hover {
             background-color: black;
         }
 
+        /* Área de exibição do resultado */
         #resultado {
-            width: 100%;
-            height: 40px;
-            margin-bottom: 10px;
-            font-size: 22px;
-            text-align: right;
-            padding-right: 10px;
             background-color: white;
+            width: 207px;
+            height: 40px;
+            margin: 5px;
+            font-size: 25px;
             color: black;
-            border-radius: 5px;
-            line-height: 40px;
-            overflow-x: auto;
+            text-align: right;
+            padding: 5px;
+            overflow-x: auto; /* Ajuda se o número for muito longo */
+            white-space: nowrap; /* Impede quebra de linha no número */
         }
 
         .botao-imc {
@@ -84,19 +79,23 @@
     <div class="fundo">
         <div class="calculadora">
             <h1>Calculadora</h1>
+
+            <!-- Resultado mostrado aqui (agora é uma <div> ao invés de <p>) -->
             <div id="resultado"></div>
+
             <table>
                 <tr>
                     <td><button class="botao" onclick="clean()">C</button></td>
-                    <td><button class="botao" onclick="back()">⌫</button></td>
+                    <!-- Corrigido o botão de apagar usando &lt; (menor que) -->
+                    <td><button class="botao" onclick="back()">&lt;</button></td>
                     <td><button class="botao" onclick="insert('/')">/</button></td>
-                    <td><button class="botao" onclick="insert('*')">×</button></td>
+                    <td><button class="botao" onclick="insert('*')">X</button></td>
                 </tr>
                 <tr>
                     <td><button class="botao" onclick="insert('7')">7</button></td>
                     <td><button class="botao" onclick="insert('8')">8</button></td>
                     <td><button class="botao" onclick="insert('9')">9</button></td>
-                    <td><button class="botao" onclick="insert('-')">−</button></td>
+                    <td><button class="botao" onclick="insert('-')">-</button></td>
                 </tr>
                 <tr>
                     <td><button class="botao" onclick="insert('4')">4</button></td>
@@ -108,38 +107,50 @@
                     <td><button class="botao" onclick="insert('1')">1</button></td>
                     <td><button class="botao" onclick="insert('2')">2</button></td>
                     <td><button class="botao" onclick="insert('3')">3</button></td>
+                    <!-- Botão de igual ocupa duas linhas -->
                     <td rowspan="2"><button class="botao" style="height: 106px;" onclick="calcular()">=</button></td>
                 </tr>
                 <tr>
+                    <!-- Botão de 0 ocupa duas colunas -->
                     <td colspan="2"><button class="botao" style="width: 106px;" onclick="insert('0')">0</button></td>
                     <td><button class="botao" onclick="insert('.')">.</button></td>
                 </tr>
             </table>
+
+            <!-- Botão para ir para a calculadora de IMC -->
             <a href="index.html" class="botao-imc">Calcular meu IMC</a>
         </div>
     </div>
 
     <script>
+        // Insere um número ou operador no visor
         function insert(num) {
-            const res = document.getElementById('resultado');
-            res.innerHTML += num;
+            var numero = document.getElementById('resultado').innerHTML;
+            document.getElementById('resultado').innerHTML = numero + num;
         }
 
+        // Limpa todo o visor
         function clean() {
-            document.getElementById('resultado').innerHTML = '';
+            document.getElementById('resultado').innerHTML = "";
         }
 
+        // Apaga o último caractere do visor
         function back() {
-            let res = document.getElementById('resultado').innerHTML;
-            document.getElementById('resultado').innerHTML = res.slice(0, -1);
+            var resultado = document.getElementById('resultado').innerHTML;
+            document.getElementById('resultado').innerHTML = resultado.substring(0, resultado.length - 1);
         }
 
+        // Faz o cálculo do que está no visor usando eval()
         function calcular() {
-            const res = document.getElementById('resultado');
-            try {
-                res.innerHTML = eval(res.innerHTML);
-            } catch {
-                res.innerHTML = 'Erro';
+            var resultado = document.getElementById('resultado').innerHTML;
+            if (resultado) {
+                try {
+                    document.getElementById('resultado').innerHTML = eval(resultado);
+                } catch {
+                    document.getElementById('resultado').innerHTML = "Erro";
+                }
+            } else {
+                document.getElementById('resultado').innerHTML = "Nada...";
             }
         }
     </script>
